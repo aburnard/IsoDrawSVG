@@ -1,6 +1,12 @@
 <template>
   <svg>
-    <ComponentPoly v-for="n in 10" :key="n" :xBias="n * xBias" :yBias="0" :sideLength="sideLength" />
+    <ComponentPoly
+      v-for="n in 10"
+      :key="n"
+      :xBias="n * xBias"
+      :yBias="n*xBias"
+      :sideLength="sideLength"
+    />
     <ComponentPolyUp
       v-for="n in 10"
       :key="n"

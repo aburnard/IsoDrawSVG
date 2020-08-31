@@ -13,26 +13,29 @@
         <b-slider v-model="Size"></b-slider>
       </b-field>
     </section>
-    <div class="container is-fluid" v-for="p in Size" :key="p">
-      <svg id="maingrid" width="100%" :height="xBias" overflow="auto">
-        <ComponentPoly
-          :color="color"
-          :downer="downer"
-          v-for="n in Size"
-          :key="n"
-          :xBias="n * xBias + (p%2 * xBias/2)"
-          :yBias="0"
-          :sideLength="xBias"
-        />
-        <ComponentPolyUp
-          :downer="downer"
-          :color="color"
-          v-for="n in Size"
-          :key="n"
-          :xBias="n * xBias + (p%2 * xBias/2)"
-          :yBias="0"
-          :sideLength="xBias"
-        />
+
+    <div class="container is-fluid">
+      <svg :width="xBias * Size *1.1" :height="xBias * Size">
+        <g v-for="p in Size" :key="p" width="100%" :height="xBias">
+          <ComponentPoly
+            :color="color"
+            :downer="downer"
+            v-for="n in Size"
+            :key="n"
+            :xBias="n * xBias + (p%2 * xBias/2)"
+            :yBias="p*xBias"
+            :sideLength="xBias"
+          />
+          <ComponentPolyUp
+            :downer="downer"
+            :color="color"
+            v-for="n in Size"
+            :key="n"
+            :xBias="n * xBias + (p%2 * xBias/2)"
+            :yBias="p*xBias"
+            :sideLength="xBias"
+          />
+        </g>
       </svg>
     </div>
   </div>
@@ -79,9 +82,9 @@ export default {
 </script>
 
 <style scoped>
-/* svg {
+svg {
   border: 1px solid red;
-} */
+}
 .container {
   font-size: 0;
 }
