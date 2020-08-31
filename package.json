@@ -12,7 +12,8 @@
     "core-js": "^3.6.5",
     "snapsvg-cjs": "0.0.6",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "vue-swatches": "^2.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",

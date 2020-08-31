@@ -1,5 +1,10 @@
 <template>
-  <polygon @click="handleClick" :points="computedPoints" :style="computedStyle" />
+  <polygon
+    @mouseenter="handleEnter(message, $event)"
+    @click="handleClick"
+    :points="computedPoints"
+    :style="computedStyle"
+  />
 </template>
 
 <script>
@@ -14,15 +19,20 @@ export default {
     };
   },
 
-  props: ["xBias", "yBias", "item", "index", "sideLength"],
+  props: ["xBias", "yBias", "item", "index", "sideLength", "color", "downer"],
   methods: {
     handleClick() {
-      this.fillColor = "red";
+      this.fillColor = this.color;
+    },
+    handleEnter(message, event) {
+      if (event.buttons == 1) {
+        this.fillColor = this.color;
+      }
     }
   },
   computed: {
     computedStyle() {
-      return "fill:" + this.fillColor + ";stroke:purple;stroke-width:1";
+      return "fill:" + this.fillColor + ";stroke:purple;stroke-width:.1";
     },
     computedPoints() {
       //return this.apb;
