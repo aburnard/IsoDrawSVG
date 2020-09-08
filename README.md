@@ -1,4 +1,4 @@
-# snappy
+# picPixelDrawSvg
 
 ## Project setup
 ```
