@@ -18,7 +18,7 @@ export default {
     };
   },
 
-  props: ["xBias", "yBias", "item", "index", "sideLength", "color", "downer"],
+  props: ["xBias", "yBias", "item", "index", "sideLength", "color"],
   methods: {
     handleClick() {
       this.fillColor = this.color;

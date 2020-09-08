@@ -52,13 +52,13 @@ export default {
       return this.yBias + this.sideLength;
     },
     pointB() {
-      return this.xBias + this.sideLength + this.sideLength / 2;
+      return this.xBias + this.sideLength * 1.5;
     },
     pointB2() {
       return this.yBias + this.sideLength;
     },
     pointC() {
-      return this.sideLength / 2 + this.xBias + this.sideLength / 2;
+      return this.sideLength + this.xBias;
     },
     pointC2() {
       return this.yBias;
