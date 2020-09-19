@@ -14,14 +14,25 @@ export default {
       //   sideLength: 100,
       apb: [0, 0, 100, 100, 0, 100],
       polyPoints: [],
-      fillColor: "blue"
+      fillColor: this.pixMatrix[this.yCoord][this.xCoord],
+      watchedColor: "blue"
     };
   },
 
-  props: ["xBias", "yBias", "item", "index", "sideLength", "color"],
+  props: [
+    "xBias",
+    "yBias",
+    "item",
+    "index",
+    "sideLength",
+    "color",
+    "xCoord",
+    "yCoord",
+    "pixMatrix"
+  ],
   methods: {
     handleClick() {
-      this.fillColor = this.color;
+      this.$emit("colorPixel");
     },
     handleEnter(message, event) {
       if (event.buttons == 1) {
@@ -29,9 +40,18 @@ export default {
       }
     }
   },
+  watch: {
+    pixMatrix: function() {
+      alert("really");
+      this.watchedColor = this.pixMatrix[this.yCoord][this.xCoord];
+    }
+  },
   computed: {
     computedStyle() {
-      return "fill:" + this.fillColor + ";stroke:purple;stroke-width:.5";
+      return "fill:" + this.watchedColor + ";stroke:purple;stroke-width:.5";
+    },
+    computedFill() {
+      return this.pixMatrix[this.yCoord][this.xCoord];
     },
     computedPoints() {
       //return this.apb;

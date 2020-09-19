@@ -41,25 +41,34 @@
         id="isoSvg"
         ref="isoSvg"
         :viewBox="computedViewBox"
-        :width="xBias * Size *1.2"
+        :width="xBias * Size * 1.2"
         :height="xBias * Size"
       >
-        <g v-for="p in Size" :key="p" width="100%" :height="xBias * .65">
+        <!-- p in size is y coord -->
+        <!-- n in size is x coord -->
+        <g v-for="p in pixMatrix[1].length" :key="p" width="100%" :height="xBias * .65">
           <ComponentPoly
             :color="color"
-            v-for="n in Size"
+            v-for="n in pixMatrix[0].length"
             :key="n"
+            :pixMatrix="pixMatrix"
             :xBias="n * xBias + (p%2 * xBias/2)"
             :yBias="p*xBias"
             :sideLength="xBias"
+            :yCoord="p-1"
+            :xCoord="n-1"
+            @colorPixel="colorPixel"
           />
           <ComponentPolyUp
             :color="color"
-            v-for="n in Size"
+            v-for="n in pixMatrixUp[0].length"
             :key="n"
             :xBias="n * xBias + (p%2 * xBias/2)"
+            :pixMatrixUp="pixMatrixUp"
             :yBias="p*xBias"
             :sideLength="xBias"
+            :yCoord="p-1"
+            :xCoord="n-1"
           />
         </g>
       </svg>
@@ -86,14 +95,28 @@ export default {
   data() {
     return {
       color: "red",
-      xBias: 37,
-      Size: 40,
+      xBias: 98,
+      Size: 5,
 
       vbx: 75,
       vby: 405,
       vbWidth: 1368,
       vbHeight: 623,
-      viewBoxArray: []
+      viewBoxArray: [],
+      pixMatrix: [
+        ["blue", "yellow", "blue", "blue", "blue", "brown"],
+        ["yellow", "blue", "blue", "blue", "blue", "brown"],
+        ["blue", "blue", "yellow", "blue", "blue", "brown"],
+        ["blue", "blue", "blue", "yellow", "blue", "brown"],
+        ["blue", "blue", "blue", "blue", "yellow", "brown"]
+      ],
+      pixMatrixUp: [
+        ["blue", "yellow", "blue", "blue", "blue", "brown"],
+        ["yellow", "blue", "blue", "blue", "blue", "brown"],
+        ["blue", "blue", "yellow", "blue", "blue", "brown"],
+        ["blue", "blue", "blue", "yellow", "blue", "brown"],
+        ["blue", "blue", "blue", "blue", "yellow", "brown"]
+      ]
     };
   },
   computed: {
@@ -129,6 +152,9 @@ export default {
     },
     released() {
       this.downer = "false";
+    },
+    colorPixel() {
+      this.pixMatrix[[3]][[3]] = "green";
     }
   }
 };

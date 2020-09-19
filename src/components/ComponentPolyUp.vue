@@ -15,11 +15,22 @@ export default {
       //   sideLength: 100,
       apb: [0, 0, 100, 100, 0, 100],
       polyPoints: [],
-      fillColor: "blue"
+
+      fillColor: this.pixMatrixUp[this.yCoord][this.xCoord]
     };
   },
 
-  props: ["xBias", "yBias", "item", "index", "sideLength", "color", "downer"],
+  props: [
+    "xBias",
+    "yBias",
+    "item",
+    "index",
+    "sideLength",
+    "color",
+    "xCoord",
+    "yCoord",
+    "pixMatrixUp"
+  ],
   methods: {
     handleClick() {
       this.fillColor = this.color;
