@@ -15,11 +15,13 @@ export default {
       apb: [0, 0, 100, 100, 0, 100],
       polyPoints: [],
       fillColor: this.pixMatrix[this.yCoord][this.xCoord],
+      localFill: "",
       watchedColor: "blue"
     };
   },
 
   props: [
+    "id",
     "xBias",
     "yBias",
     "item",
@@ -31,28 +33,36 @@ export default {
     "pixMatrix"
   ],
   methods: {
-    handleClick() {
-      this.$emit("colorPixel");
-    },
     handleEnter(message, event) {
       if (event.buttons == 1) {
-        this.fillColor = this.color;
+        this.localFill = this.color;
+        this.$emit("colorPixel", this.pixelAddress);
+        this.id++;
       }
+    },
+
+    handleClick() {
+      this.localFill = this.color;
+      this.$emit("colorPixel", this.pixelAddress);
+
+      //this.$emit("colorPixel");
     }
   },
-  watch: {
-    pixMatrix: function() {
-      alert("really");
-      this.watchedColor = this.pixMatrix[this.yCoord][this.xCoord];
-    }
-  },
+
   computed: {
+    pixelAddress: function() {
+      return [this.yCoord, this.xCoord];
+    },
+
     computedStyle() {
-      return "fill:" + this.watchedColor + ";stroke:purple;stroke-width:.5";
+      return "fill:" + this.computedFill + ";stroke:purple;stroke-width:.5";
     },
     computedFill() {
-      return this.pixMatrix[this.yCoord][this.xCoord];
+      if (this.localFill == "") {
+        return this.pixMatrix[this.yCoord][this.xCoord];
+      } else return this.localFill;
     },
+
     computedPoints() {
       //return this.apb;
       return this.polyPoints.concat(

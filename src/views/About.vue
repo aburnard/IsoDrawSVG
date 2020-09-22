@@ -3,6 +3,16 @@
 
 <template>
   <div class="about">
+    <b-field label="Message" :label-position="labelPosition">
+      <b-input v-model="pixMatrixString" type="textarea"></b-input>
+    </b-field>
+    <section>
+      <b-button @click="dumpButton">Dump</b-button>
+      <b-button @click="loadButton">Load</b-button>
+    </section>
+    <div class="field">
+      <b-switch v-model="allVisible">Default</b-switch>
+    </div>
     <section>
       <b-button @click="dumpIt()">Download as SVG</b-button>
     </section>
@@ -36,7 +46,7 @@
       </b-field>
     </section>
 
-    <div class="container is-fluid">
+    <div class="container is-fluid" v-if="allVisible">
       <svg
         id="isoSvg"
         ref="isoSvg"
@@ -50,6 +60,7 @@
           <ComponentPoly
             :color="color"
             v-for="n in pixMatrix[0].length"
+            :id="key * Math.floor(Math.random() * 10)* Math.floor(Math.random() * 10) * Math.floor(Math.random() * 10)"
             :key="n"
             :pixMatrix="pixMatrix"
             :xBias="n * xBias + (p%2 * xBias/2)"
@@ -60,6 +71,7 @@
             @colorPixel="colorPixel"
           />
           <ComponentPolyUp
+            :id="key * Math.floor(Math.random() * 10)* Math.floor(Math.random() * 10) * Math.floor(Math.random() * 10)"
             :color="color"
             v-for="n in pixMatrixUp[0].length"
             :key="n"
@@ -69,6 +81,7 @@
             :sideLength="xBias"
             :yCoord="p-1"
             :xCoord="n-1"
+            @colorPixelUp="colorPixelUp"
           />
         </g>
       </svg>
@@ -83,7 +96,7 @@ import "vue-swatches/dist/vue-swatches.css";
 import FileSaver from "file-saver";
 import ComponentPoly from "@/components/ComponentPoly.vue";
 import ComponentPolyUp from "@/components/ComponentPolyUp.vue";
-
+import startPixMatrix from "@/assets/startPixMatrix.json";
 export default {
   name: "About",
   components: {
@@ -94,32 +107,42 @@ export default {
 
   data() {
     return {
+      startPixMatrix: startPixMatrix,
+      dataPixMat: {
+        mat: [],
+        matUp: []
+      },
+      fileSaveObject: {},
+      pixMatrixString: "",
       color: "red",
       xBias: 98,
       Size: 5,
-
+      allVisible: true,
       vbx: 75,
       vby: 405,
       vbWidth: 1368,
       vbHeight: 623,
       viewBoxArray: [],
-      pixMatrix: [
-        ["blue", "yellow", "blue", "blue", "blue", "brown"],
-        ["yellow", "blue", "blue", "blue", "blue", "brown"],
-        ["blue", "blue", "yellow", "blue", "blue", "brown"],
-        ["blue", "blue", "blue", "yellow", "blue", "brown"],
-        ["blue", "blue", "blue", "blue", "yellow", "brown"]
-      ],
-      pixMatrixUp: [
-        ["blue", "yellow", "blue", "blue", "blue", "brown"],
-        ["yellow", "blue", "blue", "blue", "blue", "brown"],
-        ["blue", "blue", "yellow", "blue", "blue", "brown"],
-        ["blue", "blue", "blue", "yellow", "blue", "brown"],
-        ["blue", "blue", "blue", "blue", "yellow", "brown"]
+      matrixPlaceHolder: [],
+      pixMatrix: startPixMatrix.pixMatrix,
+      pixMatrixUp: startPixMatrix.pixMatrixUp,
+
+      pixMatrixReplace: [
+        ["purple", "yellow", "purple", "purple", "purple", "brown"],
+        ["yellow", "purple", "purple", "purple", "purple", "brown"],
+        ["purple", "purple", "yellow", "purple", "purple", "brown"],
+        ["purple", "purple", "purple", "yellow", "purple", "brown"],
+        ["purple", "purple", "purple", "purple", "yellow", "brown"]
       ]
     };
   },
   computed: {
+    // computedPixMatrixObject() {
+    //   this.dataPixMat.mat = this.pixMatrix.slice(0);
+    //    this.dataPixMat.matUp = this.pixMatrixUp.slice(0);
+    //    return this.pixMatrix + this.pixMatrixUp;
+    // },
+
     computedViewBox() {
       return (
         "" +
@@ -130,17 +153,18 @@ export default {
           this.vbHeight
         )
       );
-      //return "0,0,400,400";
     }
   },
   methods: {
     dumpIt() {
-      //console.log(this.$refs.isoSvg.outerHTML);
       let svgData = new Blob([this.$refs.isoSvg.outerHTML], {
         type: "text/plain"
       });
 
       FileSaver.saveAs(svgData, "newSvgData.svg");
+    },
+    inputTransfer() {
+      this.matrixPlaceHolder = this.pixMatrix.slice(0);
     },
     onMouseInSvg(message, event) {
       if (event.buttons == 1) {
@@ -153,8 +177,30 @@ export default {
     released() {
       this.downer = "false";
     },
-    colorPixel() {
-      this.pixMatrix[[3]][[3]] = "green";
+    colorPixel(recievedCoords) {
+      //this.matrixPlaceHolder = this.pixMatrix.slice(0);
+      this.pixMatrix[recievedCoords[0]][recievedCoords[1]] = this.color;
+      //this.pixMatrix = this.matrixPlaceHolder.slice(0);
+    },
+    colorPixelUp(recievedCoords) {
+      // this.matrixPlaceHolder = this.pixMatrixUp.slice(0);
+      this.pixMatrixUp[recievedCoords[0]][recievedCoords[1]] = this.color;
+      // this.pixMatrixUp = this.matrixPlaceHolder.slice(0);
+    },
+    dumpButton() {
+      this.dataPixMat.mat = this.pixMatrix.slice(0);
+      this.dataPixMat.matUp = this.pixMatrixUp.slice(0);
+      //alert(this.computedPixMatrixObject);
+      this.pixMatrixString = JSON.stringify(this.dataPixMat);
+    },
+
+    loadButton() {
+      // this.dataPixMat = JSON.parse(this.pixMatrixString)
+      //alert(this.computedPixMatrixObject);
+      //this.pixMatrixString = JSON.stringify(this.dataPixMat);
+      this.dataPixMat = JSON.parse(this.pixMatrixString);
+      this.pixMatrix = this.dataPixMat.mat.slice(0);
+      this.pixMatrixUp = this.dataPixMat.matUp.slice(0);
     }
   }
 };

@@ -15,12 +15,13 @@ export default {
       //   sideLength: 100,
       apb: [0, 0, 100, 100, 0, 100],
       polyPoints: [],
-
+      localFill: "",
       fillColor: this.pixMatrixUp[this.yCoord][this.xCoord]
     };
   },
 
   props: [
+    "id",
     "xBias",
     "yBias",
     "item",
@@ -33,17 +34,30 @@ export default {
   ],
   methods: {
     handleClick() {
-      this.fillColor = this.color;
+      //this.fillColor = this.color;
+      this.localFill = this.color;
+      this.$emit("colorPixelUp", this.pixelAddress);
+      this.id++;
     },
     handleEnter(message, event) {
       if (event.buttons == 1) {
-        this.fillColor = this.color;
+        this.localFill = this.color;
+        this.$emit("colorPixelUp", this.pixelAddress);
+        this.id++;
       }
     }
   },
   computed: {
+    computedFill() {
+      if (this.localFill == "") {
+        return this.pixMatrixUp[this.yCoord][this.xCoord];
+      } else return this.localFill;
+    },
     computedStyle() {
-      return "fill:" + this.fillColor + ";stroke:purple;stroke-width:.1";
+      return "fill:" + this.computedFill + ";stroke:purple;stroke-width:.1";
+    },
+    pixelAddress: function() {
+      return [this.yCoord, this.xCoord];
     },
     computedPoints() {
       //return this.apb;
