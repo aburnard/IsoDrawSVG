@@ -21,6 +21,7 @@ export default {
   },
 
   props: [
+    "eyeDropper",
     "id",
     "xBias",
     "yBias",
@@ -43,9 +44,8 @@ export default {
 
     handleClick() {
       this.localFill = this.color;
-      this.$emit("colorPixel", this.pixelAddress);
 
-      //this.$emit("colorPixel");
+      this.$emit("colorPixel", this.pixelAddress);
     }
   },
 

@@ -3,106 +3,147 @@
 
 <template>
   <div class="about">
-    <b-field label="Message" :label-position="labelPosition">
-      <b-input v-model="pixMatrixString" type="textarea"></b-input>
-    </b-field>
-    <section>
-      <b-button @click="dumpButton">Dump</b-button>
-      <b-button @click="loadButton">Load</b-button>
-      <b-button @click="newCanvas">newCanvas</b-button>
-    </section>
-    <div class="field">
-      <b-switch v-model="allVisible">Default</b-switch>
-    </div>
-    <section>
-      <b-button @click="dumpIt()">Download as SVG</b-button>
-    </section>
-    <button class="button is-medium is-dark" @click="promptNumber">
-      Launch prompt (number)
-    </button>
-    <h1>
+    <b-collapse :open="false" aria-id="contentIdForA11y1">
+      <button
+        class="button is-primary"
+        slot="trigger"
+        aria-controls="contentIdForA11y1"
+      >
+        Load/Save
+      </button>
+      <div class="notification">
+        <div class="content">
+          <h3>
+            FileSaving
+          </h3>
+          <section>
+            <b-field
+              label="Copy and Paste Textarea"
+              :label-position="labelPosition"
+            >
+              <b-input v-model="pixMatrixString" type="textarea"></b-input>
+            </b-field>
+          </section>
+
+          <section>
+            <b-button @click="dumpButton">Dump To Textarea</b-button>
+            <b-button @click="loadButton">Load from Textarea</b-button>
+            <!-- <b-button @click="newCanvas">newCanvas</b-button> -->
+          </section>
+
+          <section>
+            <b-button @click="dumpIt()">Download as SVG</b-button>
+          </section>
+        </div>
+      </div>
+    </b-collapse>
+
+    <!-- <h1>
       IsoPixelDraw Zoom {{ xBias }} Size {{ Size }} vbx {{ vbx }} vby
       {{ vby }} vbWidth {{ vbWidth }} vbHeight {{ vbHeight }} sizebyzoom
       {{ Size * xBias }}
-    </h1>
-    <b-field>
-      <vswatches v-model="color" swatches="text-advanced"></vswatches>
-    </b-field>
+    </h1> -->
+    <!-- <section>
+      <b-button @click="landscape">Landscape</b-button>
+    </section> -->
 
-    <section>
-      <b-field label="Zoom">
-        <b-slider v-model="xBias"></b-slider>
+    <div class="columns is-centered is-mobile">
+      <div class="column"></div>
+      <div class="column">
+        <section>
+          <b-field label="Zoom">
+            <b-numberinput
+              controls-rounded
+              v-model="xBias"
+              step="5"
+            ></b-numberinput>
+          </b-field>
+        </section>
+      </div>
+      <div class="column"></div>
+      <!-- <div class="column is-one-quarter">
+        <section>
+          <b-field label="vbx">
+            <b-slider :max="10000" v-model="vbx"></b-slider>
+          </b-field>
+          <b-field label="vby">
+            <b-numberinput
+              controls-position="compact"
+              controls-rounded
+              :max="10000"
+              v-model="vby"
+            ></b-numberinput>
+          </b-field>
+        </section>
+      </div> -->
+    </div>
+    <div class="column">
+      <b-field>
+        <vswatches v-model="color" swatches="text-advanced"></vswatches>
       </b-field>
-      <b-field label="Size">
-        <b-slider v-model="Size"></b-slider>
-      </b-field>
-    </section>
-    <section>
-      <b-field label="vbx">
-        <b-slider :max="10000" v-model="vbx"></b-slider>
-      </b-field>
-      <b-field label="vby">
-        <b-slider :max="10000" v-model="vby"></b-slider>
-      </b-field>
-    </section>
-    <section>
+      <div class="field">
+        <b-switch v-model="eyeDropper">
+          {{ eyeDropper }}
+        </b-switch>
+      </div>
+    </div>
+    <!-- <section>
       <b-field label="vbWidth">
         <b-slider :min="400" :max="5000" v-model="vbWidth"></b-slider>
       </b-field>
       <b-field label="vbHeight">
         <b-slider :min="500" :max="5000" v-model="vbHeight"></b-slider>
       </b-field>
-    </section>
-    <div class="box">
-      <div class="container is-fluid" v-if="allVisible">
-        <svg
-          id="isoSvg"
-          ref="isoSvg"
-          :viewBox="computedViewBox"
-          :width="xBias * Size * 1.2"
-          :height="xBias * Size"
-        >
-          <!-- p in size is y coord -->
-          <!-- n in size is x coord -->
-          <g v-for="p in 30" :key="p" width="100%" :height="xBias * 0.65">
-            <ComponentPoly
-              :color="color"
-              v-for="n in 30"
-              :id="
-                key *
-                  Math.floor(Math.random() * 10) *
-                  Math.floor(Math.random() * 10) *
-                  Math.floor(Math.random() * 10)
-              "
-              :key="n"
-              :pixMatrix="pixMatrix"
-              :xBias="n * xBias + ((p % 2) * xBias) / 2"
-              :yBias="p * xBias"
-              :sideLength="xBias"
-              :yCoord="p - 1"
-              :xCoord="n - 1"
-              @colorPixel="colorPixel"
-            />
-            <ComponentPolyUp
-              :id="
-                key *
-                  Math.floor(Math.random() * 10) *
-                  Math.floor(Math.random() * 10) *
-                  Math.floor(Math.random() * 10)
-              "
-              :color="color"
-              v-for="n in 30"
-              :key="n"
-              :xBias="n * xBias + ((p % 2) * xBias) / 2"
-              :pixMatrixUp="pixMatrixUp"
-              :yBias="p * xBias"
-              :sideLength="xBias"
-              :yCoord="p - 1"
-              :xCoord="n - 1"
-              @colorPixelUp="colorPixelUp"
-            />
-          </g>
-        </svg>
+    </section> -->
+    <div class="columns is-centered">
+      <div class="column five-eigths">
+        <div class="container">
+          <div>
+            <svg id="isoSvg" ref="isoSvg" :viewBox="computedViewBox">
+              <!-- p in size is y coord -->
+              <!-- n in size is x coord -->
+              <g v-for="p in 30" :key="p">
+                <ComponentPoly
+                  :color="color"
+                  v-for="n in rowwidth"
+                  :id="
+                    key *
+                      Math.floor(Math.random() * 10) *
+                      Math.floor(Math.random() * 10) *
+                      Math.floor(Math.random() * 10)
+                  "
+                  :key="n"
+                  :pixMatrix="pixMatrix"
+                  :xBias="n * xBias + ((p % 2) * xBias) / 2"
+                  :yBias="p * xBias"
+                  :sideLength="xBias"
+                  :eyeDropper="eyeDropper"
+                  :yCoord="p - 1"
+                  :xCoord="n - 1"
+                  @colorPixel="colorPixel"
+                />
+                <ComponentPolyUp
+                  :id="
+                    key *
+                      Math.floor(Math.random() * 10) *
+                      Math.floor(Math.random() * 10) *
+                      Math.floor(Math.random() * 10)
+                  "
+                  :color="color"
+                  v-for="n in rowwidth"
+                  :key="n"
+                  :xBias="n * xBias + ((p % 2) * xBias) / 2"
+                  :pixMatrixUp="pixMatrixUp"
+                  :yBias="p * xBias"
+                  :sideLength="xBias"
+                  :yCoord="p - 1"
+                  :xCoord="n - 1"
+                  @colorPixelUp="colorPixelUp"
+                />
+              </g>
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -131,21 +172,23 @@ export default {
         mat: [],
         matUp: []
       },
+      eyeDropper: false,
       fileSaveObject: {},
       pixMatrixString: "",
       color: "red",
-      xBias: 42,
+      xBias: 40,
       Size: 29,
+      rowwidth: 20,
       allVisible: true,
-      vbx: 0,
-      vby: 230,
-      vbWidth: 1368,
-      vbHeight: 623,
+      vbx: 115,
+      vby: 240,
+      vbWidth: 500,
+      vbHeight: 800,
       viewBoxArray: [],
       matrixPlaceHolder: [],
       pixMatrix: startPixMatrix.pixMatrix,
       pixMatrixUp: startPixMatrix.pixMatrixUp,
-
+      isOpen: false,
       pixMatrixReplace: [
         ["purple", "yellow", "purple", "purple", "purple", "brown"],
         ["yellow", "purple", "purple", "purple", "purple", "brown"],
@@ -156,12 +199,6 @@ export default {
     };
   },
   computed: {
-    // computedPixMatrixObject() {
-    //   this.dataPixMat.mat = this.pixMatrix.slice(0);
-    //    this.dataPixMat.matUp = this.pixMatrixUp.slice(0);
-    //    return this.pixMatrix + this.pixMatrixUp;
-    // },
-
     computedViewBox() {
       return (
         "" +
@@ -174,7 +211,20 @@ export default {
       );
     }
   },
+  created() {
+    if (window.innerWidth > 768) {
+      this.landscape();
+    }
+  },
   methods: {
+    landscape() {
+      this.vbWidth = 1000;
+      this.rowwidth = 60;
+      this.xBias = 25;
+      this.vbx = 86;
+      this.vby = 20;
+    },
+
     dumpIt() {
       let svgData = new Blob([this.$refs.isoSvg.outerHTML], {
         type: "text/plain"
@@ -190,30 +240,30 @@ export default {
         this.downer = true;
       }
     },
-    promptNumber() {
-      this.$buefy.dialog.prompt({
-        message: `What's your age?`,
-        inputAttrs: [
-          {
-            type: "number",
-            placeholder: "Type your age",
-            value: "18",
-            maxlength: 2,
-            min: 18
-          },
-          {
-            type: "number",
-            placeholder: "Type your age",
-            value: "18",
-            maxlength: 2,
-            min: 18
-          }
-        ],
+    // promptNumber() {
+    //   this.$buefy.dialog.prompt({
+    //     message: `What's your age?`,
+    //     inputAttrs: [
+    //       {
+    //         type: "number",
+    //         placeholder: "Type your age",
+    //         value: "18",
+    //         maxlength: 2,
+    //         min: 18
+    //       },
+    //       {
+    //         type: "number",
+    //         placeholder: "Type your age",
+    //         value: "18",
+    //         maxlength: 2,
+    //         min: 18
+    //       }
+    //     ],
 
-        trapFocus: true,
-        onConfirm: value => this.$buefy.toast.open(`Your age is: ${value}`)
-      });
-    },
+    //     trapFocus: true,
+    //     onConfirm: value => this.$buefy.toast.open(`Your age is: ${value}`)
+    //   });
+    // },
     applied() {
       this.downer = "true";
     },
@@ -232,26 +282,19 @@ export default {
       this.pixMatrix = A.slice(0);
     },
     colorPixel(recievedCoords) {
-      //this.matrixPlaceHolder = this.pixMatrix.slice(0);
       this.pixMatrix[recievedCoords[0]][recievedCoords[1]] = this.color;
-      //this.pixMatrix = this.matrixPlaceHolder.slice(0);
     },
     colorPixelUp(recievedCoords) {
-      // this.matrixPlaceHolder = this.pixMatrixUp.slice(0);
       this.pixMatrixUp[recievedCoords[0]][recievedCoords[1]] = this.color;
-      // this.pixMatrixUp = this.matrixPlaceHolder.slice(0);
     },
     dumpButton() {
       this.dataPixMat.mat = this.pixMatrix.slice(0);
       this.dataPixMat.matUp = this.pixMatrixUp.slice(0);
-      //alert(this.computedPixMatrixObject);
+
       this.pixMatrixString = JSON.stringify(this.dataPixMat);
     },
 
     loadButton() {
-      // this.dataPixMat = JSON.parse(this.pixMatrixString)
-      //alert(this.computedPixMatrixObject);
-      //this.pixMatrixString = JSON.stringify(this.dataPixMat);
       this.dataPixMat = JSON.parse(this.pixMatrixString);
       this.pixMatrix = this.dataPixMat.mat.slice(0);
       this.pixMatrixUp = this.dataPixMat.matUp.slice(0);
