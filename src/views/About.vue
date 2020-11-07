@@ -9,8 +9,9 @@
         slot="trigger"
         aria-controls="contentIdForA11y1"
       >
-        Load/Save
+        Click for Load/Save
       </button>
+
       <div class="notification">
         <div class="content">
           <h3>
@@ -29,6 +30,9 @@
             <b-button @click="dumpButton">Dump To Textarea</b-button>
             <b-button @click="loadButton">Load from Textarea</b-button>
             <!-- <b-button @click="newCanvas">newCanvas</b-button> -->
+            <b-button @click="saveareadialog">
+              ?
+            </b-button>
           </section>
 
           <section>
@@ -46,7 +50,7 @@
     <!-- <section>
       <b-button @click="landscape">Landscape</b-button>
     </section> -->
-
+    <hr />
     <div class="columns is-centered is-mobile">
       <div class="column"></div>
       <div class="column">
@@ -83,7 +87,7 @@
       </b-field>
       <div class="field">
         <b-switch v-model="eyeDropper">
-          {{ eyeDropper }}
+          Eyedropper is {{ eyeDropper }}
         </b-switch>
       </div>
     </div>
@@ -121,6 +125,7 @@
                   :yCoord="p - 1"
                   :xCoord="n - 1"
                   @colorPixel="colorPixel"
+                  @eyeDropSuck="eyeDropSuck"
                 />
                 <ComponentPolyUp
                   :id="
@@ -136,9 +141,11 @@
                   :pixMatrixUp="pixMatrixUp"
                   :yBias="p * xBias"
                   :sideLength="xBias"
+                  :eyeDropper="eyeDropper"
                   :yCoord="p - 1"
                   :xCoord="n - 1"
                   @colorPixelUp="colorPixelUp"
+                  @eyeDropSuck="eyeDropSuck"
                 />
               </g>
             </svg>
@@ -217,6 +224,11 @@ export default {
     }
   },
   methods: {
+    saveareadialog() {
+      this.$buefy.dialog.alert(
+        "DUMP To Textarea? dump image data, copy for later use. LOAD from Textarea? paste some previous data to restore your work. DOWNLOAD as SVG? Save your image as an SVG."
+      );
+    },
     landscape() {
       this.vbWidth = 1000;
       this.rowwidth = 60;
@@ -280,6 +292,10 @@ export default {
       }
       this.pixMatrixUp = A.slice(0);
       this.pixMatrix = A.slice(0);
+    },
+    eyeDropSuck(recievedColor) {
+      this.color = recievedColor;
+      this.eyeDropper = false;
     },
     colorPixel(recievedCoords) {
       this.pixMatrix[recievedCoords[0]][recievedCoords[1]] = this.color;

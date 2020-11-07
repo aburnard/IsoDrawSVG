@@ -43,9 +43,12 @@ export default {
     },
 
     handleClick() {
-      this.localFill = this.color;
-
-      this.$emit("colorPixel", this.pixelAddress);
+      if (this.eyeDropper == true) {
+        this.$emit("eyeDropSuck", this.computedFill);
+      } else {
+        this.localFill = this.color;
+        this.$emit("colorPixel", this.pixelAddress);
+      }
     }
   },
 

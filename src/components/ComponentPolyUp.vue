@@ -30,14 +30,17 @@ export default {
     "color",
     "xCoord",
     "yCoord",
-    "pixMatrixUp"
+    "pixMatrixUp",
+    "eyeDropper"
   ],
   methods: {
     handleClick() {
-      //this.fillColor = this.color;
-      this.localFill = this.color;
-      this.$emit("colorPixelUp", this.pixelAddress);
-      this.id++;
+      if (this.eyeDropper == true) {
+        this.$emit("eyeDropSuck", this.computedFill);
+      } else {
+        this.localFill = this.color;
+        this.$emit("colorPixel", this.pixelAddress);
+      }
     },
     handleEnter(message, event) {
       if (event.buttons == 1) {
