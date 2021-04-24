@@ -11,12 +11,10 @@
 export default {
   data() {
     return {
-      //   sideLength: 100,
-      apb: [0, 0, 100, 100, 0, 100],
       polyPoints: [],
       fillColor: this.pixMatrix[this.yCoord][this.xCoord],
       localFill: "",
-      watchedColor: "blue"
+      watchedColor: "blue",
     };
   },
 
@@ -31,7 +29,7 @@ export default {
     "color",
     "xCoord",
     "yCoord",
-    "pixMatrix"
+    "pixMatrix",
   ],
   methods: {
     handleEnter(message, event) {
@@ -49,11 +47,11 @@ export default {
         this.localFill = this.color;
         this.$emit("colorPixel", this.pixelAddress);
       }
-    }
+    },
   },
 
   computed: {
-    pixelAddress: function() {
+    pixelAddress: function () {
       return [this.yCoord, this.xCoord];
     },
 
@@ -67,35 +65,34 @@ export default {
     },
 
     computedPoints() {
-      //return this.apb;
       return this.polyPoints.concat(
-        this.pointA,
-        this.pointA2,
-        this.pointB,
-        this.pointB2,
-        this.pointC,
-        this.pointC2
+        this.xBias,
+        this.yBias,
+        this.xBias + this.sideLength,
+        this.yBias,
+        this.sideLength / 2 + this.xBias,
+        this.yBias + this.sideLength
       );
     },
-    pointA() {
-      return this.xBias;
-    },
-    pointA2() {
-      return this.yBias;
-    },
-    pointB() {
-      return this.xBias + this.sideLength;
-    },
-    pointB2() {
-      return this.yBias;
-    },
-    pointC() {
-      return this.sideLength / 2 + this.xBias;
-    },
-    pointC2() {
-      return this.yBias + this.sideLength;
-    }
-  }
+    // pointA() {
+    //   return this.xBias;
+    // },
+    // pointA2() {
+    //   return this.yBias;
+    // },
+    // pointB() {
+    //   return this.xBias + this.sideLength;
+    // },
+    // pointB2() {
+    //   return this.yBias;
+    // },
+    // pointC() {
+    //   return this.sideLength / 2 + this.xBias;
+    // },
+    // pointC2() {
+    //   return this.yBias + this.sideLength;
+    // },
+  },
 };
 </script>
 

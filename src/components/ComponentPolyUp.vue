@@ -12,11 +12,9 @@
 export default {
   data() {
     return {
-      //   sideLength: 100,
-      apb: [0, 0, 100, 100, 0, 100],
       polyPoints: [],
       localFill: "",
-      fillColor: this.pixMatrixUp[this.yCoord][this.xCoord]
+      fillColor: this.pixMatrixUp[this.yCoord][this.xCoord],
     };
   },
 
@@ -31,7 +29,7 @@ export default {
     "xCoord",
     "yCoord",
     "pixMatrixUp",
-    "eyeDropper"
+    "eyeDropper",
   ],
   methods: {
     handleClick() {
@@ -48,7 +46,7 @@ export default {
         this.$emit("colorPixelUp", this.pixelAddress);
         this.id++;
       }
-    }
+    },
   },
   computed: {
     computedFill() {
@@ -59,39 +57,39 @@ export default {
     computedStyle() {
       return "fill:" + this.computedFill + ";stroke:purple;stroke-width:.1";
     },
-    pixelAddress: function() {
+    pixelAddress: function () {
       return [this.yCoord, this.xCoord];
     },
     computedPoints() {
-      //return this.apb;
-      return this.polyPoints.concat(
-        this.pointA,
-        this.pointA2,
-        this.pointB,
-        this.pointB2,
-        this.pointC,
-        this.pointC2
+      let compPoints = [];
+      return compPoints.concat(
+        this.xBias + this.sideLength / 2,
+        this.yBias + this.sideLength,
+        this.xBias + this.sideLength * 1.5,
+        this.yBias + this.sideLength,
+        this.sideLength + this.xBias,
+        this.yBias
       );
     },
-    pointA() {
-      return this.xBias + this.sideLength / 2;
-    },
-    pointA2() {
-      return this.yBias + this.sideLength;
-    },
-    pointB() {
-      return this.xBias + this.sideLength * 1.5;
-    },
-    pointB2() {
-      return this.yBias + this.sideLength;
-    },
-    pointC() {
-      return this.sideLength + this.xBias;
-    },
-    pointC2() {
-      return this.yBias;
-    }
-  }
+    // pointA() {
+    //   return this.xBias + this.sideLength / 2;
+    // },
+    // pointA2() {
+    //   return this.yBias + this.sideLength;
+    // },
+    // pointB() {
+    //   return this.xBias + this.sideLength * 1.5;
+    // },
+    // pointB2() {
+    //   return this.yBias + this.sideLength;
+    // },
+    // pointC() {
+    //   return this.sideLength + this.xBias;
+    // },
+    // pointC2() {
+    //   return this.yBias;
+    // },
+  },
 };
 </script>
 
